@@ -1,0 +1,6 @@
+@use '@angular/material' as mat;
+@use 'variables' as var;
+
+@include mat.core();
+
+@include mat.all-component-themes(var.$theme);

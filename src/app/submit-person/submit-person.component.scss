@@ -1,0 +1,51 @@
+:host {
+  display: block;
+  padding: 2rem;
+}
+
+.skills-header,
+.skill {
+  display: flex;
+  justify-content: space-between;
+}
+
+.skill {
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.interests {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+
+  mat-card-content {
+    margin-top: 1rem;
+  }
+}
+
+.skills {
+  margin-top: 1rem;
+  mat-card-content {
+    margin-top: 1rem;
+  }
+}
+
+.first-row {
+  display: grid;
+  gap: 1rem;
+}
+
+.actions {
+  margin-top: 2rem;
+  display: grid;
+  grid-gap: 1rem;
+}
+
+.warn {
+  color: var(--mat-form-field-error-text-color);
+}
+
+form {
+  display: grid;
+  grid-gap: 1rem;
+}

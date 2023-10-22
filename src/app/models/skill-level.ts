@@ -1,0 +1,8 @@
+import { z } from 'zod';
+
+export const SkillLevelSchema = z.object({
+  skillLevelId: z.number(),
+  skillLevelName: z.string(),
+});
+
+export type SkillLevel = z.infer<typeof SkillLevelSchema>;

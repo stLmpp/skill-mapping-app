@@ -1,0 +1,152 @@
+<form
+  [formGroup]="formGroup"
+  (ngSubmit)="onSubmit()"
+  appPersistentForm="submit-person"
+  #formLocalStorage="appFormLocalStorage"
+>
+  <mat-form-field>
+    <mat-label>EID</mat-label>
+    <input
+      formControlName="eid"
+      matInput
+      type="text"
+      [maxLength]="eidMaxLength"
+      [minLength]="1"
+      [pattern]="eidPattern"
+    />
+    <mat-hint>Exemplo: joao.silva</mat-hint>
+    <mat-hint align="end">
+      {{ eidControl.value?.length ?? 0 }}/{{ eidMaxLength }}
+    </mat-hint>
+    <mat-error>
+      {{ !eidControl.value ? 'EID é obrigatório' : 'EID inválido' }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Career Level</mat-label>
+    <mat-select formControlName="careerLevelId">
+      @for (careerLevel of careerLevelService.careerLevels(); track careerLevel.careerLevelId) {
+        <mat-option [value]="careerLevel.careerLevelId">
+          {{ careerLevel.careerLevelName }}
+        </mat-option>
+      }
+    </mat-select>
+    <mat-error>
+      Career level é obrigatório
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Último cliente</mat-label>
+    <mat-select formControlName="lastCustomerId">
+      @for (customer of customerService.customers(); track customer.customerId) {
+        <mat-option [value]="customer.customerId">
+          {{ customer.customerName }}
+        </mat-option>
+      }
+    </mat-select>
+    <mat-error>
+      Último cliente é obrigatório
+    </mat-error>
+  </mat-form-field>
+
+  <mat-card class="skills">
+    <mat-card-header class="skills-header">
+      <mat-card-title>Skills</mat-card-title>
+    </mat-card-header>
+
+
+    <mat-card-content formArrayName="skills">
+      <mat-form-field>
+        <mat-label>Pesquisar</mat-label>
+        <input
+          matInput
+          type="text"
+          [ngModel]="term$ | async"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="term$.next($event)"
+        >
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+      @for (skill of skillsFiltered(); track skill.skillId; let index = $index) {
+        <div class="skill" [formGroupName]="index">
+          <mat-checkbox formControlName="checked">
+            {{ skill.skillName }}
+          </mat-checkbox>
+          <mat-radio-group
+            name="skill-level-id-{{ index }}"
+            formControlName="skillLevelId"
+          >
+            @for (skillLevel of skillLevelService.skillLevels(); track skillLevel.skillLevelId) {
+              <mat-radio-button
+                [value]="skillLevel.skillLevelId"
+                [disabled]="!skillsArrayControl.controls[index].value.checked"
+              >
+                {{ skillLevel.skillLevelName }}
+              </mat-radio-button>
+            }
+          </mat-radio-group>
+        </div>
+      }
+
+      @if (skillsArrayControl.invalid) {
+        <p class="warn">Pelo menos 1 skill deve ser selecionada!</p>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="interests" formArrayName="interests">
+    <mat-card-header>
+      <mat-card-title>Interesses</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-chip-listbox multiple>
+        @for (skill of skillService.skills(); track skill.skillId; let index = $index) {
+          <mat-chip-option
+            [value]="skill.skillId"
+            [selected]="formGroup.controls.interests.value | arrayIncludes:skill.skillId"
+            (selectionChange)="onInterestSelection($event)"
+          >
+            {{ skill.skillName }}
+          </mat-chip-option>
+        }
+      </mat-chip-listbox>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-form-field>
+    <mat-label>Outras informações</mat-label>
+    <textarea
+      matInput
+      formControlName="otherInformation"
+      cdkTextareaAutosize
+      [maxLength]="otherInformationMaxLength">
+    </textarea>
+    <mat-hint>Descreva aqui qualquer informação adicional</mat-hint>
+    <mat-hint align="end">
+      {{ otherInformationControl.value?.length ?? 0 }}/{{ otherInformationMaxLength }}
+    </mat-hint>
+    <mat-error>Outras informações inválido</mat-error>
+  </mat-form-field>
+
+  <div class="actions" (mouseenter)="activateValidations()">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="formGroup.invalid || loading()"
+    >
+      Enviar
+    </button>
+    <button
+      mat-raised-button
+      color="warn"
+      type="button"
+      [disabled]="loading()"
+      (click)="onReset()"
+    >
+      Limpar
+    </button>
+  </div>
+</form>
