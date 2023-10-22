@@ -38,6 +38,20 @@
   </mat-form-field>
 
   <mat-form-field>
+    <mat-label>Chapter</mat-label>
+    <mat-select formControlName="chapterId">
+      @for (chapter of chapterService.chapters(); track chapter.chapterId) {
+        <mat-option [value]="chapter.chapterId">
+          {{ chapter.chapterName }}
+        </mat-option>
+      }
+    </mat-select>
+    <mat-error>
+      Chapter é obrigatório
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
     <mat-label>Último cliente</mat-label>
     <mat-select formControlName="lastCustomerId">
       @for (customer of customerService.customers(); track customer.customerId) {

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { careerLevelResolver } from './career-level/career-level.resolver';
+import { chapterResolver } from './chapter/chapter.resolver';
 import { customerResolver } from './customer/customer.resolver';
 import { skillResolver } from './skill/skill.resolver';
 import { skillLevelResolver } from './skill-level/skill-level.resolver';
@@ -17,6 +18,7 @@ export const routes: Routes = [
       skillLevelResolver(),
       careerLevelResolver(),
       customerResolver(),
+      chapterResolver(),
     ],
   },
 ];

@@ -32,6 +32,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, debounceTime } from 'rxjs';
 
 import { CareerLevelService } from '../career-level/career-level.service';
+import { ChapterService } from '../chapter/chapter.service';
 import { CustomerService } from '../customer/customer.service';
 import { Skill } from '../models/skill';
 import { PersistentFormDirective } from '../persistent-form.directive';
@@ -71,6 +72,7 @@ export class SubmitPersonComponent {
   readonly customerService = inject(CustomerService);
   readonly personService = inject(PersonService);
   readonly matSnackBar = inject(MatSnackBar);
+  readonly chapterService = inject(ChapterService);
 
   @ViewChild('formLocalStorage') formLocalStorage!: PersistentFormDirective;
 
@@ -140,6 +142,10 @@ export class SubmitPersonComponent {
       [Validators.required],
     ),
     otherInformation: this.otherInformationControl,
+    chapterId: this.formBuilder.control<number | undefined>(
+      { value: undefined, disabled: false },
+      [Validators.required],
+    ),
   });
 
   private createNewSkillGroup(skill: Skill) {
@@ -186,13 +192,14 @@ export class SubmitPersonComponent {
       careerLevelId,
       interests,
       otherInformation,
+      chapterId,
     } = this.formGroup.getRawValue();
     this.personService
       .upsert({
         eid,
         lastCustomerId: lastCustomerId!,
         careerLevelId: careerLevelId!,
-        chapterId: 1, // TODO
+        chapterId: chapterId!,
         interests,
         skills: skills
           .filter((skill) => skill.checked)
