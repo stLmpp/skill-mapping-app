@@ -11,12 +11,12 @@
       matInput
       type="text"
       [maxLength]="eidMaxLength"
-      [minLength]="1"
+      [minLength]="eidMinLength"
       [pattern]="eidPattern"
     />
     <mat-hint>Exemplo: joao.silva</mat-hint>
     <mat-hint align="end">
-      {{ eidControl.value.length ?? 0 }}/{{ eidMaxLength }}
+      {{ eidControl.value.length }}/{{ eidMaxLength }}
     </mat-hint>
     <mat-error>
       {{ !eidControl.value ? 'EID é obrigatório' : 'EID inválido' }}
