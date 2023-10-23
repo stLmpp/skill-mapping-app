@@ -16,7 +16,7 @@
     />
     <mat-hint>Exemplo: joao.silva</mat-hint>
     <mat-hint align="end">
-      {{ eidControl.value?.length ?? 0 }}/{{ eidMaxLength }}
+      {{ eidControl.value.length ?? 0 }}/{{ eidMaxLength }}
     </mat-hint>
     <mat-error>
       {{ !eidControl.value ? 'EID é obrigatório' : 'EID inválido' }}
