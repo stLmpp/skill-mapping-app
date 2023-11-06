@@ -8,7 +8,10 @@ import {
   MAT_SNACK_BAR_DEFAULT_OPTIONS,
   MatSnackBarConfig,
 } from '@angular/material/snack-bar';
-import { provideClientHydration } from '@angular/platform-browser';
+import {
+  provideClientHydration,
+  withHttpTransferCacheOptions,
+} from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 
@@ -20,7 +23,11 @@ import { zodInterceptor } from './zod/zod.interceptor';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideClientHydration(),
+    provideClientHydration(
+      withHttpTransferCacheOptions({
+        includePostRequests: false,
+      }),
+    ),
     provideAnimations(),
     provideHttpClient(
       withFetch(),
