@@ -4,12 +4,12 @@
 }
 
 .skills-header,
-.skill {
+.skill, .languages-header, .language {
   display: flex;
   justify-content: space-between;
 }
 
-.skill {
+.skill, .language {
   align-items: center;
   margin-top: 1rem;
 }
@@ -23,7 +23,7 @@
   }
 }
 
-.skills {
+.skills, .languages {
   margin-top: 1rem;
   mat-card-content {
     margin-top: 1rem;

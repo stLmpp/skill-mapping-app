@@ -24,6 +24,29 @@
   </mat-form-field>
 
   <mat-form-field>
+    <mat-label>People lead EID</mat-label>
+    <input
+      formControlName="peopleLeadEid"
+      matInput
+      type="text"
+      [maxLength]="eidMaxLength"
+      [minLength]="eidMinLength"
+      [pattern]="eidPattern"
+    />
+    <mat-hint>Exemplo: joao.silva</mat-hint>
+    <mat-hint align="end">
+      {{ peopleLeadEidControl.value.length }}/{{ eidMaxLength }}
+    </mat-hint>
+    <mat-error>
+      {{
+        !peopleLeadEidControl.value ?
+          'People lead EID é obrigatório' :
+          'People lead EID inválido'
+      }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
     <mat-label>Career Level</mat-label>
     <mat-select formControlName="careerLevelId">
       @for (careerLevel of careerLevelService.careerLevels(); track careerLevel.careerLevelId) {
@@ -62,6 +85,20 @@
     </mat-select>
     <mat-error>
       Último cliente é obrigatório
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Última função</mat-label>
+    <mat-select formControlName="lastJobRoleId">
+      @for (jobRole of jobRoleService.jobRoles(); track jobRole.jobRoleId) {
+        <mat-option [value]="jobRole.jobRoleId">
+          {{ jobRole.jobRoleName }}
+        </mat-option>
+      }
+    </mat-select>
+    <mat-error>
+      Última função é obrigatório
     </mat-error>
   </mat-form-field>
 
@@ -106,6 +143,36 @@
 
       @if (skillsArrayControl.invalid) {
         <p class="warn">Pelo menos 1 skill deve ser selecionada!</p>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="languages">
+    <mat-card-header class="languages-header">
+      <mat-card-title>Idiomas</mat-card-title>
+    </mat-card-header>
+
+
+    <mat-card-content formArrayName="languages">
+      @for (language of languageService.languages(); track language.languageId; let index = $index) {
+        <div class="language" [formGroupName]="index">
+          <mat-checkbox formControlName="checked">
+            {{ language.languageName }}
+          </mat-checkbox>
+          <mat-radio-group
+            name="language-skill-level-id-{{ index }}"
+            formControlName="skillLevelId"
+          >
+            @for (skillLevel of skillLevelService.skillLevels(); track skillLevel.skillLevelId) {
+              <mat-radio-button
+                [value]="skillLevel.skillLevelId"
+                [disabled]="!languagesArrayControl.controls[index].value.checked"
+              >
+                {{ skillLevel.skillLevelName }}
+              </mat-radio-button>
+            }
+          </mat-radio-group>
+        </div>
       }
     </mat-card-content>
   </mat-card>

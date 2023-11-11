@@ -29,6 +29,9 @@ export function zodInterceptor(): HttpInterceptorFn {
           response.body,
         );
         if (!result.success) {
+          if (isDevMode()) {
+            console.warn(`We failed to validate the response from ${request.url}. Error:`, result.error)
+          }
           throw new HttpResponse({
             body: {},
             url: response.url ?? undefined,

@@ -13,16 +13,22 @@ import {
   withHttpTransferCacheOptions,
 } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideRouter } from '@angular/router';
+import {
+  provideRouter,
+  TitleStrategy,
+  withComponentInputBinding,
+  withRouterConfig,
+} from '@angular/router';
 
 import { apiInterceptor } from './api.interceptor';
 import { routes } from './app.routes';
 import { handleErrorInterceptor } from './error/handle-error.interceptor';
+import { TitleResolver } from './title.resolver';
 import { zodInterceptor } from './zod/zod.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes),
+    provideRouter(routes, withRouterConfig({}), withComponentInputBinding()),
     provideClientHydration(
       withHttpTransferCacheOptions({
         includePostRequests: false,
@@ -40,6 +46,10 @@ export const appConfig: ApplicationConfig = {
     {
       provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
       useValue: { duration: 2500 } satisfies MatSnackBarConfig,
+    },
+    {
+      provide: TitleStrategy,
+      useExisting: TitleResolver,
     },
   ],
 };

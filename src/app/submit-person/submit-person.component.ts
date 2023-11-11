@@ -40,6 +40,9 @@ import { PersonService } from '../person/person.service';
 import { ArrayIncludesPipe } from '../shared/array-includes.pipe';
 import { SkillService } from '../skill/skill.service';
 import { SkillLevelService } from '../skill-level/skill-level.service';
+import { JobRoleService } from '../job-role/job-role.service';
+import { Language } from '../models/language';
+import { LanguageService } from '../language/language.service';
 
 @Component({
   selector: 'app-submit-person',
@@ -73,6 +76,8 @@ export class SubmitPersonComponent {
   readonly personService = inject(PersonService);
   readonly matSnackBar = inject(MatSnackBar);
   readonly chapterService = inject(ChapterService);
+  readonly jobRoleService = inject(JobRoleService);
+  readonly languageService = inject(LanguageService);
 
   @ViewChild('formLocalStorage') formLocalStorage!: PersistentFormDirective;
 
@@ -105,6 +110,14 @@ export class SubmitPersonComponent {
       Validators.pattern(this.eidPattern),
     ],
   });
+  readonly peopleLeadEidControl = this.formBuilder.control('', {
+    validators: [
+      Validators.required,
+      Validators.maxLength(this.eidMaxLength),
+      Validators.minLength(this.eidMinLength),
+      Validators.pattern(this.eidPattern),
+    ],
+  });
   readonly skillsArrayControl = this.formBuilder.array(
     this.skillService.skills().map((skill) => this.createNewSkillGroup(skill)),
     {
@@ -124,6 +137,11 @@ export class SubmitPersonComponent {
       ],
     },
   );
+  readonly languagesArrayControl = this.formBuilder.array(
+    this.languageService
+      .languages()
+      .map((language) => this.createNewLanguageGroup(language)),
+  );
   readonly otherInformationControl = this.formBuilder.control<
     string | undefined
   >({ value: undefined, disabled: false }, [
@@ -131,6 +149,7 @@ export class SubmitPersonComponent {
   ]);
   readonly formGroup = this.formBuilder.group({
     eid: this.eidControl,
+    peopleLeadEid: this.peopleLeadEidControl,
     skills: this.skillsArrayControl,
     interests: this.formBuilder.array<FormControl<number>>([]),
     careerLevelId: this.formBuilder.control<number | undefined>(
@@ -146,6 +165,11 @@ export class SubmitPersonComponent {
       { value: undefined, disabled: false },
       [Validators.required],
     ),
+    lastJobRoleId: this.formBuilder.control<number | undefined>(
+      { value: undefined, disabled: false },
+      [Validators.required],
+    ),
+    languages: this.languagesArrayControl,
   });
 
   private createNewSkillGroup(skill: Skill) {
@@ -154,6 +178,20 @@ export class SubmitPersonComponent {
       skillId: this.formBuilder.control(skill.skillId, {
         validators: [Validators.required],
       }),
+      skillLevelId: this.formBuilder.control<number>(
+        this.skillLevelService.skillLevels().at(0)!.skillLevelId,
+        {
+          validators: [Validators.required],
+        },
+      ),
+      checked: this.formBuilder.control(false),
+    });
+  }
+
+  private createNewLanguageGroup(language: Language) {
+    return this.formBuilder.group({
+      languageId: this.formBuilder.control(language.languageId),
+      languageName: this.formBuilder.control(language.languageName),
       skillLevelId: this.formBuilder.control<number>(
         this.skillLevelService.skillLevels().at(0)!.skillLevelId,
         {
@@ -193,6 +231,9 @@ export class SubmitPersonComponent {
       interests,
       otherInformation,
       chapterId,
+      lastJobRoleId,
+      peopleLeadEid,
+      languages,
     } = this.formGroup.getRawValue();
     this.personService
       .upsert({
@@ -208,6 +249,14 @@ export class SubmitPersonComponent {
             skillLevelId: skill.skillLevelId,
           })),
         otherInformation,
+        lastJobRoleId: lastJobRoleId!,
+        peopleLeadEid,
+        languages: languages
+          .filter((language) => language.checked)
+          .map((language) => ({
+            languageId: language.languageId,
+            skillLevelId: language.skillLevelId,
+          })),
       })
       .subscribe({
         next: () => {
