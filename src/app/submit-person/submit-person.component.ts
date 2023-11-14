@@ -29,20 +29,21 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BehaviorSubject, debounceTime } from 'rxjs';
 
 import { CareerLevelService } from '../career-level/career-level.service';
 import { ChapterService } from '../chapter/chapter.service';
 import { CustomerService } from '../customer/customer.service';
+import { JobRoleService } from '../job-role/job-role.service';
+import { LanguageService } from '../language/language.service';
+import { Language } from '../models/language';
 import { Skill } from '../models/skill';
 import { PersistentFormDirective } from '../persistent-form.directive';
 import { PersonService } from '../person/person.service';
 import { ArrayIncludesPipe } from '../shared/array-includes.pipe';
 import { SkillService } from '../skill/skill.service';
 import { SkillLevelService } from '../skill-level/skill-level.service';
-import { JobRoleService } from '../job-role/job-role.service';
-import { Language } from '../models/language';
-import { LanguageService } from '../language/language.service';
 
 @Component({
   selector: 'app-submit-person',
@@ -62,6 +63,7 @@ import { LanguageService } from '../language/language.service';
     MatCheckboxModule,
     FormsModule,
     PersistentFormDirective,
+    MatTooltipModule,
   ],
   templateUrl: './submit-person.component.html',
   styleUrls: ['./submit-person.component.scss'],

@@ -135,6 +135,14 @@
                 [disabled]="!skillsArrayControl.controls[index].value.checked"
               >
                 {{ skillLevel.skillLevelName }}
+                @if (skillLevel.skillLevelDescription) {
+                  <mat-icon
+                    [inline]="true"
+                    [matTooltip]="skillLevel.skillLevelDescription"
+                  >
+                    info_outline
+                  </mat-icon>
+                }
               </mat-radio-button>
             }
           </mat-radio-group>
