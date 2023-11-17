@@ -133,6 +133,7 @@
               <mat-radio-button
                 [value]="skillLevel.skillLevelId"
                 [disabled]="!skillsArrayControl.controls[index].value.checked"
+                class="skill-level-radio"
               >
                 {{ skillLevel.skillLevelName }}
                 @if (skillLevel.skillLevelDescription) {

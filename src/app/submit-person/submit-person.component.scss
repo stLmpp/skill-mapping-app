@@ -49,3 +49,13 @@ form {
   display: grid;
   grid-gap: 1rem;
 }
+
+.skill-level-radio:not(:last-of-type) {
+  margin-right: 3rem;
+}
+
+@media only screen and (max-width: 599px) {
+  .skill-level-radio:not(:last-of-type) {
+    margin-right: 0;
+  }
+}
